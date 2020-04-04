@@ -15,4 +15,6 @@ public class UserDTO {
 	
 	@NotBlank
 	private String password;
+	
+	private Long userRoleId;
 }

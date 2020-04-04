@@ -11,8 +11,9 @@ public enum ExceptionCode {
     INVALID_TYPE_VALUE(400, "C005", " Invalid Type Value"),
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
 	// Exception
-    NULL_BODY(400, "C007", "Required request body is null")
-    
+    NULL_BODY(400, "C007", "Required request body is null"),
+    UNAUTHORIZED_REQUEST(400, "C008", "Unauthorized request"),
+    DUPLICATE_EMAIL(400, "C009", "Duplicate Email")
     ;
 	
 	private int status;
