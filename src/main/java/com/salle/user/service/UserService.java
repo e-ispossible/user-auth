@@ -30,6 +30,38 @@ public class UserService {
 	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Transactional
+	public void deleteAll(List<User> userList) {
+		userList.stream().forEach(user -> user.setDelYn(Boolean.TRUE));
+		userRepo.saveAll(userList);
+	}
+	
+	@Transactional
+	public void delete(Long uid) {
+		Optional<User> optUser = userRepo.findById(uid);
+		if(!optUser.isPresent()) {
+			throw new RuntimeException("User not found with id [" + uid + "]");
+		}
+		User user = optUser.get(); 
+		user.setDelYn(Boolean.TRUE);
+		userRepo.save(user);
+	}
+	
+	@Transactional
+	public Long update(UserDTO userDTO) {
+		if(userRepo.existsById(userDTO.getId())) {
+			throw new RuntimeException("User not found with id [" + userDTO.getId() + "]");
+		}
+		if(userRepo.existsByEmail(userDTO.getEmail())) {
+			throw new DuplicateEmailException("");
+		}
+		User user = new User();
+		user.setId(userDTO.getId());
+		user.setEmail(userDTO.getEmail());
+		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+		return userRepo.save(user).getId();
+	}
+	
+	@Transactional
 	public Long save(UserDTO userDTO) {
 		if(userRepo.existsByEmail(userDTO.getEmail())) {
 			throw new DuplicateEmailException("");
@@ -40,6 +72,15 @@ public class UserService {
 		user.setEmail(userDTO.getEmail());
 		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		return userRepo.save(user).getId();
+	}
+	
+	@Transactional(readOnly = true)
+	public User get(Long uid) {
+		Optional<User> optUser = userRepo.findById(uid);
+		if(!optUser.isPresent()) {
+			throw new RuntimeException("User not found with id [" + uid + "]");
+		}
+		return optUser.get();
 	}
 	
 	@Transactional(readOnly = true)
@@ -93,4 +134,6 @@ public class UserService {
 		userSession.setUserRoleId(user.getUserRoleId());
 		return userSession;
 	}
+	
+	
 }

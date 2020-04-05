@@ -52,4 +52,8 @@ public class User implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP) //TIMESTAMP
 	@CreatedDate
 	private Date createdDate; //생성일시
+	
+	@JsonIgnore
+	@Column(name="del_yn", columnDefinition="BIT(1)")
+	private Boolean delYn;
 }
